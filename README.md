@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Country Info API
+
+A simple Next.js API application that provides country information with built-in Prometheus metrics and Loki logging.
+
+## Features
+
+- **3 REST APIs** for country information:
+  - `/api/currency/[country]` - Returns currency symbol, value against USD, and date
+  - `/api/animal/[country]` - Returns national animal and scientific name
+  - `/api/capital/[country]` - Returns capital city and population
+
+- **Interactive UI** - Test APIs directly from the home page
+
+- **Monitoring & Observability**:
+  - Prometheus metrics exposed at `/api/metrics`
+  - Automatic metrics push to Grafana Cloud
+  - Loki logging with detailed request tracking (IP, geo-location, headers, query params)
+
+## Supported Countries
+
+USA, UK, Japan, India, Germany, France, Canada, Australia, China, Brazil, Mexico, South Korea, Russia
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
+2. **Set up environment variables:**
+   
+   Copy `.env.example` to `.env.local` and add your Grafana Cloud credentials:
+   ```bash
+   cp .env.example .env.local
+   ```
+
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open [http://localhost:3000](http://localhost:3000)** to see the interactive API tester.
+
+## API Usage
+
+### Currency API
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+curl http://localhost:3000/api/currency/japan
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Response:
+```json
+{
+  "country": "japan",
+  "currency": {
+    "symbol": "¥",
+    "valueAgainstUSD": 149.5,
+    "date": "2025-12-09"
+  }
+}
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Animal API
+```bash
+curl http://localhost:3000/api/animal/india
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Capital API
+```bash
+curl http://localhost:3000/api/capital/germany
+```
 
-## Learn More
+## Monitoring
 
-To learn more about Next.js, take a look at the following resources:
+- **Metrics**: Access Prometheus metrics at `/api/metrics`
+- **Grafana Cloud**: Metrics and logs are automatically pushed to Grafana Cloud when environment variables are configured
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Required for Grafana Cloud integration:
+
+- `GRAFANA_METRICS_URL` - OTLP metrics endpoint
+- `GRAFANA_USERNAME` - Grafana Cloud metrics user ID
+- `GRAFANA_API_KEY` - Grafana Cloud API token
+- `LOKI_HOST` - Loki endpoint URL
+- `LOKI_USERNAME` - Loki user ID
+- `LOKI_PASSWORD` - Loki API token
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Import your repository to Vercel
+2. Add environment variables from `.env.example`
+3. Deploy!
+
+## Tech Stack
+
+- Next.js 16.0.8
+- TypeScript
+- Tailwind CSS
+- Prometheus (prom-client)
+- Winston Logger
+- Grafana Cloud (Loki + Prometheus)
