@@ -67,6 +67,7 @@ export default function Home() {
                 <option value="currency">💰 Currency</option>
                 <option value="animal">🦁 National Animal</option>
                 <option value="capital">🏛️ Capital City</option>
+                <option value="exchange-rate">💱 Exchange Rate (INR)</option>
               </select>
             </div>
 
@@ -164,6 +165,29 @@ export default function Home() {
             </div>
             <p className="text-sm text-gray-500 mt-3">
               Example: <code className="bg-gray-100 px-2 py-1 rounded">/api/capital/france</code>
+            </p>
+          </div>
+
+          {/* Exchange Rate API */}
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border-2 border-indigo-200">
+            <div className="flex items-center mb-4">
+              <span className="text-3xl mr-3">💱</span>
+              <h2 className="text-2xl font-semibold text-gray-800">Exchange Rate API</h2>
+              <span className="ml-2 bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs font-medium">NEW</span>
+            </div>
+            <p className="text-gray-600 mb-4">
+              Get INR conversion rate for a country's currency. <strong>Calls Currency API internally!</strong>
+            </p>
+            <div className="bg-gray-100 rounded-lg p-4">
+              <code className="text-sm text-indigo-600">
+                GET /api/exchange-rate/[country]
+              </code>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">
+              Example: <code className="bg-gray-100 px-2 py-1 rounded">/api/exchange-rate/usa</code>
+            </p>
+            <p className="text-xs text-indigo-600 mt-2">
+              ⛓️ Dependent API: First calls /api/currency, then calculates INR rate
             </p>
           </div>
         </div>
