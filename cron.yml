@@ -2,7 +2,7 @@ id: test_api_caller
 namespace: doomsday.testing
 
 description: |
-  Test API Caller
+  Test API Caller using Kestra
   Calls 3 different API endpoints with different frequencies:
   - /api/capital/india → Every 4 minutes
   - /api/currency/germany → Every 15 minutes
