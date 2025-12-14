@@ -1,0 +1,58 @@
+id: test_api_caller
+namespace: doomsday.testing
+
+description: |
+  Test API Caller - Simulates traffic to observability endpoints
+  
+  Calls 3 different API endpoints with different frequencies:
+  - /api/capital/india → Every 4 minutes
+  - /api/currency/germany → Every 15 minutes
+  - /api/exchange-rate/japan → Every 8 minutes (dependent API - calls currency internally)
+  - /api/animal → Never called (zombie endpoint)
+
+labels:
+  team: doomsday
+  category: testing
+  purpose: traffic-generation
+
+inputs:
+  - id: uri
+    type: STRING
+    defaults: https://for-fun-six.vercel.app/api/capital/india
+
+tasks:
+  - id: call_endpoint
+    type: io.kestra.plugin.core.http.Request
+    description: Call API endpoint based on trigger
+    uri: "{{ inputs.uri }}"
+    method: GET
+    options:
+      timeout:
+        connectTimeout: PT30S
+    
+  - id: log_response
+    type: io.kestra.plugin.core.log.Log
+    message: "API called: {{ inputs.uri }} - Status: {{ outputs.call_endpoint.code }}"
+    level: INFO
+
+triggers:
+  # Trigger 1: Call /api/capital/india every 4 minutes
+  - id: capital_every_4_minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/4 * * * *"
+    inputs:
+      uri: https://for-fun-six.vercel.app/api/capital/india
+    
+  # Trigger 2: Call /api/currency/germany every 15 minutes
+  - id: currency_every_15_minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/15 * * * *"
+    inputs:
+      uri: https://for-fun-six.vercel.app/api/currency/germany
+  
+  # Trigger 3: Call /api/exchange-rate/japan every 8 minutes (dependent API)
+  - id: exchange_rate_every_8_minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/8 * * * *"
+    inputs:
+      uri: https://for-fun-six.vercel.app/api/exchange-rate/japan
